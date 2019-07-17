@@ -2,7 +2,8 @@
   <g class="points">
     <Point
       v-for="pointData in seriesData.values"
-      v-if="typeof pointData.value !== typeof null"
+      v-if="isPointDataValueNull(pointData.value)"
+      :key="pointData.timestamp"
       :series-id="seriesData.id"
       :point-data="pointData"
       :layout="layout"
@@ -23,6 +24,11 @@ export default {
     scale: {
       deep: true,
       handler: function() {} // Has to be included for nested components watch to fire properly
+    }
+  },
+  methods: {
+    isPointDataValueNull(value) {
+      return typeof value !== typeof null;
     }
   }
 };

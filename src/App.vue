@@ -9,7 +9,7 @@
         <Chart
           v-if="this.chartData"
           :layout="layout"
-          :chart-data="chartData"
+          :chart-data="this.chartData"
           :axes="axes"
         />
       </div>

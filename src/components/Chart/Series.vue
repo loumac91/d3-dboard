@@ -1,12 +1,8 @@
 <template>
   <g class="d3__series">
-    <Area :layout="layout" :series-data="this.seriesData" :scale="this.scale" />
-    <Line :layout="layout" :series-data="this.seriesData" :scale="this.scale" />
-    <Scatter
-      :layout="layout"
-      :series-data="this.seriesData"
-      :scale="this.scale"
-    />
+    <Area :layout="layout" :series-data="seriesData" :scale="scale" />
+    <Line :layout="layout" :series-data="seriesData" :scale="scale" />
+    <Scatter :layout="layout" :series-data="seriesData" :scale="scale" />
   </g>
 </template>
 

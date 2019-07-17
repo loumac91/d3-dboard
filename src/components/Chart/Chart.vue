@@ -25,8 +25,7 @@ import Series from "./Series.vue";
 import _ from "lodash";
 
 import { scaleTime, scaleLinear, scaleOrdinal } from "d3-scale";
-import { utcParse } from "d3-time-format";
-import { extent, max } from "d3-array";
+import { max, min } from "d3-array";
 
 export default {
   components: {
@@ -84,21 +83,23 @@ export default {
       }
     }
   },
-  mounted() {
-    debugger;
-    this;
-  },
   methods: {
     // Get x-axis scale
     getScaleX: function() {
       return scaleTime()
         .range([0, this.layout.width])
-        .domain(
-          extent(this.chartData, function(d) {
-            debugger;
-            return utcParse("%Y-%m-%dT%H:%M:%S")(d[0]).setHours(0, 0, 0, 0);
+        .domain([
+          min(this.chartData, function(d) {
+            return min(d.values, function(e) {
+              return e.timestamp;
+            });
+          }),
+          max(this.chartData, function(d) {
+            return max(d.values, function(e) {
+              return e.timestamp;
+            });
           })
-        );
+        ]);
     },
 
     // Get y-axis scale

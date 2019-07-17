@@ -33,7 +33,7 @@ export default {
     drawLine: function() {
       // Get scale
       var scale = this.scale;
-
+      debugger;
       // Line object
       var d3Line = line()
         .x(function(d) {
