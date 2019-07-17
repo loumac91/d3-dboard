@@ -27,6 +27,7 @@ export default {
     }
   },
   mounted: function() {
+    debugger;
     this.drawLine();
   },
   methods: {
@@ -34,6 +35,7 @@ export default {
       // Get scale
       var scale = this.scale;
       debugger;
+      console.log("scale", scale);
       // Line object
       var d3Line = line()
         .x(function(d) {
