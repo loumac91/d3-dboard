@@ -1,49 +1,77 @@
 <template>
-  <circle ref="point" class="point" :style="style"></circle>
+  <circle
+    class="point"
+    :cx="cx"
+    :cy="cy"
+    :r="r"
+    :style="style"
+    @click="handleClick"
+  ></circle>
 </template>
 
 <script>
-import { select } from "d3-selection";
-
+// v-on="this.$listeners"
 export default {
-  props: ["layout", "pointData", "scale", "seriesId"],
-  computed: {
-    style: function() {
-      return {
-        fill: "#fff",
-        stroke: this.scale.color(this.seriesId),
-        strokeWidth: 2
-      };
-    }
-  },
-  watch: {
+  props: {
+    layout: {
+      type: Object,
+      required: true
+    },
+    pointData: {
+      type: Object,
+      required: true
+    },
     scale: {
-      deep: true,
-      handler: function(val, oldVal) {
-        this.drawPoint();
-      }
+      type: Object,
+      required: true
+    },
+    seriesId: {
+      type: String,
+      required: true
+    },
+    selected: {
+      type: Boolean,
+      required: true
     }
   },
-  mounted: function() {
-    this.drawPoint();
+  computed: {
+    style() {
+      return {
+        fill: this.selected ? "#ff0000" : "#fff",
+        stroke: this.scale.color(this.seriesId),
+        strokeWidth: 1
+      };
+    },
+    r() {
+      return this.selected ? 5 : 3;
+    },
+    cx() {
+      return this.scale.x(this.pointData.timestamp);
+    },
+    cy() {
+      return this.scale.y(this.pointData.value);
+    }
   },
   methods: {
-    drawPoint: function() {
-      // Get scales
-      var scale = this.scale;
-
-      // DOM node for points
-      var $point = select(this.$refs.point);
-      $point
-        .datum(this.pointData)
-        .attr("cx", function(d) {
-          return scale.x(d.timestamp);
-        })
-        .attr("cy", function(d) {
-          return scale.y(d.value);
-        })
-        .attr("r", 5);
+    handleClick(e) {
+      this.$emit("click", e);
     }
   }
 };
 </script>
+
+<style scoped lang="scss">
+.point:hover {
+  // pointer-events: all;
+  fill: #ff0000;
+}
+
+.point circle {
+  fill: #999;
+  cursor: pointer;
+}
+
+.point--selected {
+  fill: blue;
+}
+</style>

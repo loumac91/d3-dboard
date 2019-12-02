@@ -9,51 +9,47 @@ import { select } from "d3-selection";
 export default {
   props: ["layout", "seriesData", "scale"],
   computed: {
-    style: function() {
+    style() {
       return {
         fill: "none",
         stroke: this.scale.color(this.seriesData.id),
-        strokeWidth: 2
+        strokeWidth: 8 // 2
       };
+    },
+    nonNullSeriesDataValues() {
+      return this.seriesData.values.filter(function(d) {
+        return typeof d.value !== typeof null;
+      });
     }
   },
   watch: {
-    // Changes to scale means we have to redraw the line!
+    // Changes to scale means we have to redraw the line
     scale: {
       deep: true,
-      handler: function(val, oldVal) {
+      handler() {
         this.drawLine();
       }
     }
   },
   mounted: function() {
-    debugger;
     this.drawLine();
   },
   methods: {
     drawLine: function() {
-      // Get scale
-      var scale = this.scale;
-      debugger;
-      console.log("scale", scale);
       // Line object
-      var d3Line = line()
-        .x(function(d) {
-          return scale.x(d.timestamp);
-        })
-        .y(function(d) {
-          return scale.y(d.value);
-        });
+      const d3Line = line()
+        .x(this.getXScale)
+        .y(this.getYScale);
 
       // DOM node for line
-      var $line = select(this.$refs.line);
-      $line
-        .data([
-          this.seriesData.values.filter(function(d) {
-            return typeof d.value !== typeof null;
-          })
-        ])
-        .attr("d", d3Line);
+      const $line = select(this.$refs.line);
+      $line.data([this.nonNullSeriesDataValues]).attr("d", d3Line);
+    },
+    getXScale(d) {
+      return this.scale.x(d.timestamp);
+    },
+    getYScale(d) {
+      return this.scale.y(d.value);
     }
   }
 };

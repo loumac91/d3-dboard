@@ -1,8 +1,8 @@
 <template>
-  <svg :view-box.camel="viewBox" preserveAspectRatio="xMidYMid meet">
+  <svg :view-box.camel="viewBox">
     <g class="d3__stage" :style="stageStyle">
       <Axis
-        v-for="axis in uniqueAxes"
+        v-for="axis in uniqueAxis"
         :key="axis"
         :axis="axis"
         :layout="layout"
@@ -32,8 +32,21 @@ export default {
     Axis,
     Series
   },
-  props: ["axes", "layout", "chartData"],
-  data: function() {
+  props: {
+    axes: {
+      type: Array,
+      required: true
+    },
+    layout: {
+      type: Object,
+      required: true
+    },
+    chartData: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
     return {
       scale: {
         x: this.getScaleX(),
@@ -45,28 +58,21 @@ export default {
     };
   },
   computed: {
-    // SVG viewbox
-    viewBox: function() {
-      var outerWidth =
-          this.layout.width + this.layout.marginLeft + this.layout.marginRight,
-        outerHeight =
-          this.layout.height + this.layout.marginTop + this.layout.marginBottom;
-      return "0 0 " + outerWidth + " " + outerHeight;
-    },
+    viewBox() {
+      const outerWidth =
+        this.layout.width + this.layout.marginLeft + this.layout.marginRight;
 
-    // Stage
-    stageStyle: function() {
+      const outerHeight =
+        this.layout.height + this.layout.marginTop + this.layout.marginBottom;
+
+      return `0 0 ${outerWidth} ${outerHeight}`;
+    },
+    stageStyle() {
       return {
-        transform:
-          "translate(" +
-          this.layout.marginLeft +
-          "px," +
-          this.layout.marginTop +
-          "px)"
+        transform: `translate(${this.layout.marginLeft}px, ${this.layout.marginTop}px)`
       };
     },
-
-    uniqueAxes: function() {
+    uniqueAxis() {
       // Creates a duplicate-free version of an array, using SameValueZero for equality comparisons,
       // in which only the first occurrence of each element is kept. The order of result values is
       // determined by the order they occur in the array.
@@ -74,42 +80,39 @@ export default {
     }
   },
   watch: {
-    // Watch for layout changes
     layout: {
       deep: true,
-      handler: function(val, oldVal) {
+      // eslint-disable-next-line
+      handler(val, oldVal) {
         this.scale.x = this.getScaleX();
         this.scale.y = this.getScaleY();
       }
     }
   },
   methods: {
-    // Get x-axis scale
-    getScaleX: function() {
+    getScaleX() {
       return scaleTime()
         .range([0, this.layout.width])
         .domain([
-          min(this.chartData, function(d) {
-            return min(d.values, function(e) {
+          min(this.chartData, d => {
+            return min(d.values, e => {
               return e.timestamp;
             });
           }),
-          max(this.chartData, function(d) {
-            return max(d.values, function(e) {
+          max(this.chartData, d => {
+            return max(d.values, e => {
               return e.timestamp;
             });
           })
         ]);
     },
-
-    // Get y-axis scale
-    getScaleY: function() {
+    getScaleY() {
       return scaleLinear()
         .range([this.layout.height, 0])
         .domain([
           0,
-          max(this.chartData, function(d) {
-            return max(d.values, function(e) {
+          max(this.chartData, d => {
+            return max(d.values, e => {
               return e.value;
             });
           })

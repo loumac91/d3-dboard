@@ -1,13 +1,14 @@
 <template>
   <g class="points">
     <Point
-      v-for="pointData in seriesData.values"
-      v-if="isPointDataValueNull(pointData.value)"
-      :key="pointData.timestamp"
+      v-for="(pointData, index) in filteredData"
+      :key="index"
       :series-id="seriesData.id"
-      :point-data="pointData"
+      :point-data="pointData.value"
       :layout="layout"
       :scale="scale"
+      :selected="pointData.selected"
+      @click="handleClick(pointData, index)"
     />
   </g>
 </template>
@@ -19,16 +20,46 @@ export default {
   components: {
     Point
   },
-  props: ["layout", "seriesData", "scale"],
-  watch: {
+  props: {
+    layout: {
+      type: Object,
+      required: true
+    },
+    seriesData: {
+      type: Object,
+      required: true
+    },
     scale: {
-      deep: true,
-      handler: function() {} // Has to be included for nested components watch to fire properly
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      filteredData: this.getFilteredSeriesData()
+    };
+  },
+  computed: {
+    nonNullSeriesValues() {
+      const filtered = this.seriesData.values.filter(
+        v => typeof v.value !== typeof null
+      );
+      return filtered.map((e, i) => {
+        return { selected: i === filtered.length - 1, value: e };
+      });
     }
   },
   methods: {
-    isPointDataValueNull(value) {
-      return typeof value !== typeof null;
+    getFilteredSeriesData() {
+      const filtered = this.seriesData.values.filter(
+        v => typeof v.value !== typeof null
+      );
+      return filtered.map((e, i) => {
+        return { selected: i === filtered.length - 1, value: e };
+      });
+    },
+    handleClick(pointData, index) {
+      this.$set(this.filteredData[index], "selected", true);
     }
   }
 };

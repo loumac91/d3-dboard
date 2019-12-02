@@ -7,23 +7,31 @@ body {
 }
 
 #grid-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 50px;    
-    grid-template-areas: /* this declares the areas of the grid */
-        "main"
-        "foot";
-    height: 100vh;
+    // margin: 0;
+    // height: 100vh;
+    // display: grid;
+    // grid-template-columns: 1fr;
+    // grid-template-rows: 1fr 50px;    
+    // grid-template-areas: /* this declares the areas of the grid */
+    //     "main"
+    //     "foot";
+    
+}
+
+#grid-container {
+    // display: flex;
+    // flex-direction: column;    
+    // flex-wrap: wrap;
 }
 
 #grid-container > .main {
-    grid-area: main;
-    background-color: #8fd4d9;
+    // grid-area: main;
+    // background-color: #8fd4d9;
 }
 
 #grid-container > .footer {
     grid-area: foot;
-    background-color: #648ca6;
+    // background-color: #648ca6;
 }
 
 .footer {
@@ -32,17 +40,15 @@ body {
     /* Distribute items evenly The first item is flush with the start, the last is flush with the end */
     justify-content: space-between;
     padding: 0 16px;
-    background-color: #648ca6;
 }
 
 /* MAIN HEADER - WHITE BLOCK */
 
 .main-header {
     display: flex;
-    justify-content: space-between;
-    height: 500px; /* Force our height since we don't have actual content yet */
     background-color: #e3e4e6;
     color: slategray;  
+    min-height: fit-content;
 }
 
 /* ================================= */

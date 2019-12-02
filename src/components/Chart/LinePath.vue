@@ -1,9 +1,10 @@
 <template>
-  <path class="area" :style="style" :d="d"></path>
+  <path class="line" :style="style" :d="d"></path>
 </template>
 
 <script>
-import { area, curveMonotoneX } from "d3-shape";
+// curve interpolation comparison here - https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529
+import { line, curveMonotoneX } from "d3-shape";
 
 export default {
   props: {
@@ -23,20 +24,20 @@ export default {
   computed: {
     style() {
       return {
-        fill: this.scale.color(this.seriesData.id),
-        fillOpacity: 0.4
+        fill: "none",
+        stroke: this.scale.color(this.seriesData.id),
+        strokeWidth: 1
       };
     },
     d() {
-      const computedArea = area()
+      const computedLine = line()
         .curve(curveMonotoneX)
         .x(d => this.scale.x(d.timestamp))
-        .y0(this.scale.y(0))
-        .y1(d => this.scale.y(d.value));
+        .y(d => this.scale.y(d.value));
 
-      return computedArea(this.areaDatum);
+      return computedLine(this.lineData);
     },
-    areaDatum() {
+    lineData() {
       return this.seriesData.values.filter(d => {
         return typeof d.value !== typeof null;
       });

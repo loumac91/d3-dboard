@@ -1,15 +1,11 @@
 <template>
   <div id="grid-container">
-    <header class="header"></header>
     <main class="main">
-      <!-- <DivContainer class="main-header">
-        <BarChart :data="values" :padding="3" colour="orange" />
-      </DivContainer> -->
       <div class="main-header">
         <Chart
-          v-if="this.chartData"
+          v-if="chartData"
           :layout="layout"
-          :chart-data="this.chartData"
+          :chart-data="chartData"
           :axes="axes"
         />
       </div>
@@ -45,8 +41,6 @@
 </template>
 
 <script>
-// import BarChart from "./components/BarChart.vue";
-// import DivContainer from "./components/DivContainer.vue";
 import Chart from "./components/Chart/Chart.vue";
 
 import { baseData } from "./baseData";
@@ -55,23 +49,10 @@ import { utcParse } from "d3-time-format";
 export default {
   name: "App",
   components: {
-    // BarChart,
-    // DivContainer,
     Chart
   },
   data() {
     return {
-      // values: [
-      //   {
-      //     v: 10
-      //   },
-      //   {
-      //     v: 20
-      //   },
-      //   {
-      //     v: 30
-      //   }
-      // ],
       layout: {
         width: 800,
         height: 250,
@@ -85,15 +66,15 @@ export default {
   },
   computed: {
     chartData() {
-      // https://codepen.io/terrymun/pen/gmBdKq
-      var cData = baseData.data.flipbooks.rawData;
+      const cData = baseData.data.flipbooks.rawData;
 
-      var columns = ["Timestamp", "Previous", "Current"],
-        offset = 1;
-      return columns.slice(offset).map(function(id, index) {
+      const columns = ["Timestamp", "Previous", "Current"];
+      const offset = 1;
+
+      return columns.slice(offset).map((id, index) => {
         return {
           id: id,
-          values: cData.map(function(d) {
+          values: cData.map(d => {
             return {
               timestamp: utcParse("%Y-%m-%dT%H:%M:%S")(d[0]).setHours(
                 0,
