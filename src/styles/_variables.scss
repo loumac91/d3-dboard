@@ -4,6 +4,9 @@ $layout-margin--mid           : 16 !default; // [in pixels] Space outside the gr
 $layout-margin--narrow        : 16 !default; // [in pixels] Space outside the grid
 $layout-max-width             : 1272 !default; // [in pixels]
 
+
+$chart-animation-time: 0.75s;
+
 // $breakpoints: map-to-em((
 //     tiny       : 375px,
 //     narrow     : 414px,    // narrow devices

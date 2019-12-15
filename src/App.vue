@@ -1,38 +1,37 @@
 <template>
   <div id="grid-container">
-    <main class="main">
-      <div class="main-header">
-        <Chart
-          v-if="chartData"
-          :layout="layout"
-          :chart-data="chartData"
-          :axes="axes"
-        />
+    <div ref="header" class="main-header">
+      <LoadingIndicator />
+      <Chart
+        v-if="chartData"
+        :layout="layout"
+        :chart-data="chartData"
+        :axes="axes"
+      />
+    </div>
+    <div class="main-overview">
+      <div class="overviewcard">
+        <div class="overviewcard__icon">Overview</div>
+        <div class="overviewcard__info">Card</div>
       </div>
-      <div class="main-overview">
-        <div class="overviewcard">
-          <div class="overviewcard__icon">Overview</div>
-          <div class="overviewcard__info">Card</div>
-        </div>
-        <div class="overviewcard">
-          <div class="overviewcard__icon">Overview</div>
-          <div class="overviewcard__info">Card</div>
-        </div>
-        <div class="overviewcard">
-          <div class="overviewcard__icon">Overview</div>
-          <div class="overviewcard__info">Card</div>
-        </div>
-        <div class="overviewcard">
-          <div class="overviewcard__icon">Overview</div>
-          <div class="overviewcard__info">Card</div>
-        </div>
+      <div v-if="isFakeActionLoading" class="overviewcard">
+        <div class="overviewcard__icon">Overview</div>
+        <div class="overviewcard__info">Card</div>
       </div>
-      <div class="main-cards">
-        <div class="card">Card</div>
-        <div class="card">Card</div>
-        <div class="card">Card</div>
+      <div class="overviewcard">
+        <div class="overviewcard__icon">Overview</div>
+        <div class="overviewcard__info">Card</div>
       </div>
-    </main>
+      <div class="overviewcard">
+        <div class="overviewcard__icon">Overview</div>
+        <div class="overviewcard__info">Card</div>
+      </div>
+    </div>
+    <div class="main-cards">
+      <div class="card">Card</div>
+      <div class="card">Card</div>
+      <div class="card">Card</div>
+    </div>
     <footer class="footer">
       <div class="footer__copyright">&copy; 2019 JE</div>
       <div class="footer__signature">Footer Placeholder</div>
@@ -42,6 +41,7 @@
 
 <script>
 import Chart from "./components/Chart/Chart.vue";
+import LoadingIndicator from "./components/LoadingIndicator.vue";
 
 import { baseData } from "./baseData";
 import { utcParse } from "d3-time-format";
@@ -49,7 +49,8 @@ import { utcParse } from "d3-time-format";
 export default {
   name: "App",
   components: {
-    Chart
+    Chart,
+    LoadingIndicator
   },
   data() {
     return {
@@ -71,7 +72,7 @@ export default {
       const columns = ["Timestamp", "Previous", "Current"];
       const offset = 1;
 
-      return columns.slice(offset).map((id, index) => {
+      const chartData = columns.slice(offset).map((id, index) => {
         return {
           id: id,
           values: cData.map(d => {
@@ -87,7 +88,15 @@ export default {
           })
         };
       });
+
+      return chartData.slice(0, 1);
+    },
+    isFakeActionLoading() {
+      return this.$store.getters["getLoadingState"]("FAKE_LOADING_ACTION");
     }
+  },
+  mounted() {
+    this.$store.dispatch("FAKE_LOADING_ACTION");
   }
 };
 </script>

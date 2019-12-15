@@ -1,5 +1,7 @@
 <template>
-  <path class="area" :style="style" :d="d"></path>
+  <path ref="area" class="area" :style="style" :d="d">
+    <animate attribute-name="stroke-dashoffset" to="0" dur="0.75s" />
+  </path>
 </template>
 
 <script>
@@ -20,13 +22,12 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      style: null
+    };
+  },
   computed: {
-    style() {
-      return {
-        fill: this.scale.color(this.seriesData.id),
-        fillOpacity: 0.4
-      };
-    },
     d() {
       const computedArea = area()
         .curve(curveMonotoneX)
@@ -41,6 +42,35 @@ export default {
         return typeof d.value !== typeof null;
       });
     }
+  },
+  mounted() {
+    this.setStyle();
+  },
+  methods: {
+    setStyle() {
+      const totalLength = this.$refs.area.getTotalLength();
+      console.log(totalLength);
+      this.style = {
+        fill: this.scale.color(this.seriesData.id),
+        "stroke-dashoffset": `${totalLength}`,
+        "stroke-dasharray": `${totalLength} ${totalLength}`
+      };
+    }
   }
 };
 </script>
+
+<style scoped lang="scss">
+@import "../../styles/_variables.scss";
+
+.area {
+  fill-opacity: 0.3;
+  // animation: dash $chart-animation-time linear forwards;
+}
+
+// @keyframes dash {
+//   to {
+//     stroke-dashoffset: 0;
+//   }
+// }
+</style>

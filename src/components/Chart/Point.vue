@@ -1,6 +1,6 @@
 <template>
   <circle
-    class="point"
+    :class="['point', cssClass]"
     :cx="cx"
     :cy="cy"
     :r="r"
@@ -37,7 +37,7 @@ export default {
   computed: {
     style() {
       return {
-        fill: this.selected ? "#ff0000" : "#fff",
+        // fill: this.selected ? "#ff0000" : "#fff",
         stroke: this.scale.color(this.seriesId),
         strokeWidth: 1
       };
@@ -50,6 +50,11 @@ export default {
     },
     cy() {
       return this.scale.y(this.pointData.value);
+    },
+    cssClass() {
+      return {
+        "is-active": this.selected
+      };
     }
   },
   methods: {
@@ -61,14 +66,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.point:hover {
-  // pointer-events: all;
-  fill: #ff0000;
-}
+.point {
+  fill: #fff;
 
-.point circle {
-  fill: #999;
-  cursor: pointer;
+  &.is-active {
+    fill: red;
+  }
+
+  &:hover {
+    // pointer-events: all;
+    fill: blue;
+    box-shadow: red 0 8px blue;
+  }
 }
 
 .point--selected {

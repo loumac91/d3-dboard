@@ -81,6 +81,7 @@ export default {
         left: axisLeft(scale.y)
       };
 
+      const result = axisTop(scale.x);
       $axis.call(axisGenerator[this.axis]);
     }
   }

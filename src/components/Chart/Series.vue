@@ -30,6 +30,20 @@ export default {
       type: Object,
       required: true
     }
+  },
+  mounted() {
+    console.log(this.scale.x.bandwidth());
   }
 };
 </script>
+
+<style>
+.left-to-right-enter-active {
+  /* transition-property: opacity; */
+  transition: all 2.3s ease;
+}
+
+.left-to-right-enter {
+  opacity: 0;
+}
+</style>

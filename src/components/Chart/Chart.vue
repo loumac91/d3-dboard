@@ -24,7 +24,7 @@ import Axis from "./Axis.vue";
 import Series from "./Series.vue";
 import _ from "lodash";
 
-import { scaleTime, scaleLinear, scaleOrdinal } from "d3-scale";
+import { scaleTime, scaleLinear, scaleOrdinal, scaleBand } from "d3-scale";
 import { max, min } from "d3-array";
 
 export default {
@@ -91,6 +91,23 @@ export default {
   },
   methods: {
     getScaleX() {
+      // https://www.d3-graph-gallery.com/graph/custom_axis.html
+      const test = scaleBand()
+        .range([0, this.layout.width])
+        .domain([
+          min(this.chartData, d => {
+            return min(d.values, e => {
+              return e.timestamp;
+            });
+          }),
+          max(this.chartData, d => {
+            return max(d.values, e => {
+              return e.timestamp;
+            });
+          })
+        ]);
+      console.log(test.bandwidth());
+
       return scaleTime()
         .range([0, this.layout.width])
         .domain([
